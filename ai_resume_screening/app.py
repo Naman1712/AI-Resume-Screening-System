@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from pypdf import PdfReader
 
 from resume_screening import ScreeningConfig, get_sample_inputs, screen_resumes
 
@@ -17,8 +18,8 @@ with st.sidebar:
     st.divider()
     st.subheader("Resumes")
     uploaded = st.file_uploader(
-        "Upload .txt resumes (multiple allowed)",
-        type=["txt"],
+        "Upload resumes (.txt or .pdf, multiple allowed)",
+        type=["txt", "pdf"],
         accept_multiple_files=True,
     )
 
@@ -33,11 +34,26 @@ def _load_uploaded_resumes(files):
     out = {}
     for f in files:
         name = f.name.rsplit(".", 1)[0]
-        raw = f.read()
-        try:
-            text = raw.decode("utf-8")
-        except Exception:
-            text = raw.decode("latin-1", errors="ignore")
+        extension = f.name.rsplit(".", 1)[-1].lower() if "." in f.name else ""
+
+        if extension == "pdf":
+            try:
+                reader = PdfReader(f)
+                pages = []
+                for page in reader.pages:
+                    pages.append(page.extract_text() or "")
+                text = "\n".join(pages).strip()
+            except Exception:
+                text = ""
+        else:
+            raw = f.read()
+            try:
+                text = raw.decode("utf-8")
+            except Exception:
+                text = raw.decode("latin-1", errors="ignore")
+
+        if not text.strip():
+            text = f"No extractable text found in {f.name}."
         out[name] = text
     return out
 
