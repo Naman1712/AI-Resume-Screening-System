@@ -1,4 +1,4 @@
-# AI Resume Screening System (MVP)
+# AI Resume Screening System
 
 This is a simple, working MVP for the Nutrabay AI Automation Intern assessment (Problem 1).
 

@@ -7,7 +7,7 @@ from resume_screening import ScreeningConfig, get_sample_inputs, screen_resumes
 
 
 st.set_page_config(page_title="AI Resume Screening", layout="wide")
-st.title("AI Resume Screening System (MVP)")
+st.title("AI Resume Screening System")
 st.caption("Upload a job description + multiple resumes to get match score, ranking, strengths, gaps, and fit recommendation.")
 
 
